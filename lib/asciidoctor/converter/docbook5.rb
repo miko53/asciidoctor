@@ -649,6 +649,7 @@ module Asciidoctor
 
     def document_info_tag doc, info_tag_prefix, use_info_tag_prefix = false
       info_tag_prefix = '' unless use_info_tag_prefix
+      p doc
       result = []
       result << %(<#{info_tag_prefix}info>)
       result << document_title_tags(doc.doctitle :partition => true, :use_fallback => true) unless doc.notitle
@@ -668,16 +669,34 @@ module Asciidoctor
             result << '</authorgroup>'
           end
         end
-        if (doc.attr? 'revdate') && ((doc.attr? 'revnumber') || (doc.attr? 'revremark'))
-          result << %(<revhistory>
-<revision>)
-          result << %(<revnumber>#{doc.attr 'revnumber'}</revnumber>) if doc.attr? 'revnumber'
-          result << %(<date>#{doc.attr 'revdate'}</date>) if doc.attr? 'revdate'
-          result << %(<authorinitials>#{doc.attr 'authorinitials'}</authorinitials>) if doc.attr? 'authorinitials'
-          result << %(<revremark>#{doc.attr 'revremark'}</revremark>) if doc.attr? 'revremark'
-          result << %(</revision>
-</revhistory>)
+        
+        if (doc.attr? 'revision_list')
+           result << %(<revhistory>)
+           revision_list = doc.attr 'revision_list'
+           revision_list.each do |revision| 
+               if (revision['revdate'] && (revision['revnumber'] || revision['revremark']))
+                 result << %(<revision>)
+                 result << %(<revnumber>#{revision['revnumber']}</revnumber>) if revision['revnumber']
+                 result << %(<date>#{revision['revdate']}</date>) if revision['revdate']
+                 result << %(<authorinitials>#{doc.attr 'authorinitials'}</authorinitials>) if doc.attr? 'authorinitials'
+                 result << %(<revremark>#{revision['revremark']}</revremark>) if revision['revremark']
+                 result << %(</revision>)
+               end
+           end
+           p revision_list
+           result << %(</revhistory>)
         end
+        
+#        if (doc.attr? 'revdate') && ((doc.attr? 'revnumber') || (doc.attr? 'revremark'))
+#          result << %(<revhistory>
+#<revision>)
+#          result << %(<revnumber>#{doc.attr 'revnumber'}</revnumber>) if doc.attr? 'revnumber'
+#          result << %(<date>#{doc.attr 'revdate'}</date>) if doc.attr? 'revdate'
+#          result << %(<authorinitials>#{doc.attr 'authorinitials'}</authorinitials>) if doc.attr? 'authorinitials'
+#          result << %(<revremark>#{doc.attr 'revremark'}</revremark>) if doc.attr? 'revremark'
+#          result << %(</revision>
+#</revhistory>)
+#        end
         unless use_info_tag_prefix
           if (doc.attr? 'front-cover-image') || (doc.attr? 'back-cover-image')
             if (back_cover_tag = cover_tag doc, 'back')
