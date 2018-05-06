@@ -680,7 +680,7 @@ module Asciidoctor
                  result << %(<revnumber>#{revision['revnumber']}</revnumber>) if revision['revnumber']
                  result << %(<date>#{revision['revdate']}</date>) if revision['revdate']
                  result << %(<authorinitials>#{revision['author']}</authorinitials>) if revision['author']
-                 result << %(<revremark>#{revision['revremark']}</revremark>) if revision['revremark']
+                 result << %(<revremark>#{revision['revremark'].gsub '\n', '<sbr/>' }</revremark>) if revision['revremark']
                  result << %(</revision>)
                end
            end

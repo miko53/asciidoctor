@@ -1831,10 +1831,26 @@ class Parser
             end
           end
           
-          rev_metadata['author'] = match[3].rstrip if match[3] && match[4]
-          rev_metadata['revremark'] = match[4].rstrip if match[3] && match[4]
-          rev_metadata['revremark'] = match[3].rstrip if match[3] && !match[4]
-
+          if match[3] && match[4]
+            rev_metadata['author'] = match[3].rstrip 
+            rev_metadata['revremark'] = match[4].rstrip
+            
+            if rev_metadata['revremark'][-1] == '\\'
+              rev_metadata['revremark'].chomp!('\\')
+              while reader.has_more_lines? && !reader.next_line_empty?
+                rev_line = reader.read_line
+                rev_metadata['revremark'] << rev_line
+                rev_metadata['revremark'].chomp!('\\')
+                rev_metadata['revremark'] << '\n'
+                if rev_line[-1] != '\\'
+                  break
+                end
+              end
+            end
+          elsif match[3] && !match[4]
+            rev_metadata['revremark'] = match[3].rstrip
+          end
+          
           #p rev_metadata
           revision_list.push rev_metadata
         else

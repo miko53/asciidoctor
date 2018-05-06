@@ -439,7 +439,7 @@ module Asciidoctor
     #   1.0, Jan 01, 2013
     #
     #RevisionInfoLineRx = /^(?:\D*(.*?),)? *(?!:)(.*?)(?: *(?!^),?: *(.*))?$/
-    RevisionInfoLineRx = /^(?:\D*(.*?),)? *(?!:)(.*?)(?: *(?!^),?: *(.*?))?(?: *(?!^),?: *(.*?))?$/
+    RevisionInfoLineRx = /^(?:\D*(.*?),)? *(?!:)(.*?)(?: *(?!^),?: *(.*?))?(?: *(?!^),?: *(.*?))?$/m
 
     # Matches the title and volnum in the manpage doctype.
     #
